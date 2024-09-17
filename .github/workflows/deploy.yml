@@ -28,16 +28,20 @@ jobs:
         cd green-sisya/server
         npm run build
 
+    - name: Set up SSH for server connection
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H 212.193.30.159 >> ~/.ssh/known_hosts
+
     - name: Deploy to Server
-      uses: appleboy/ssh-action@master
-      with:
-        host: 212.193.30.159
-        username: root
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /path/to/frontend/repo
-          git pull
-          npm install
-          npm run build
-          sudo mv dist/* /var/www/html/
-          sudo systemctl restart nginx
+      run: |
+        ssh -i ~/.ssh/id_rsa root@212.193.30.159 "
+        cd /var/www/green-sisya &&
+        git pull &&
+        npm install &&
+        npm run build &&
+        sudo mv dist/* /var/www/html/ &&
+        sudo systemctl restart nginx
+        "
