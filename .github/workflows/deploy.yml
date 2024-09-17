@@ -20,13 +20,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd green-sisya/server
         npm install
 
     - name: Build the project
-      run: |
-        cd green-sisya/server
-        npm run build
+      run: npm run build
 
     - name: Set up SSH for server connection
       run: |
@@ -36,13 +33,13 @@ jobs:
         ssh-keyscan -H 212.193.30.159 >> ~/.ssh/known_hosts
 
     - name: Deploy to Server
-      run: |
-        ssh -i ~/.ssh/id_rsa root@212.193.30.159 "
-        cd /var/www/green-sisya &&
-        git pull &&
-        npm install &&
-        npm run build &&
-        npm  run server &&
-        sudo mv dist/* /var/www/html/ &&
-        sudo systemctl restart nginx
-        "
+      uses: appleboy/ssh-action@master
+      with:
+        host: 212.193.30.159
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /var/www/green-sisya
+          git pull
+          docker-compose down
+          docker-compose up -d --build

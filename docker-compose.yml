@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: .
+    ports:
+      - "80:80"
+    restart: always
+    volumes:
+      - ./dist:/usr/share/nginx/html
