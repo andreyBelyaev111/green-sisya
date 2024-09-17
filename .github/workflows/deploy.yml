@@ -20,10 +20,13 @@ jobs:
 
     - name: Install dependencies
       run: |
+        cd green-sisya/server
         npm install
 
     - name: Build the project
-      run: npm run build
+      run: |
+        cd green-sisya/server
+        npm run build
 
     - name: Set up SSH for server connection
       run: |
