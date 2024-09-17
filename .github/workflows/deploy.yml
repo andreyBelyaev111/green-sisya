@@ -31,8 +31,8 @@ jobs:
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.SERVER_IP }}
-        username: ${{ secrets.SERVER_USER }}
+        host: 212.193.30.159
+        username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /path/to/frontend/repo
